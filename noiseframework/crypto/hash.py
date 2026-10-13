@@ -4,6 +4,7 @@ Hash functions for the Noise Protocol Framework.
 Supports SHA-256, SHA-512, BLAKE2s, and BLAKE2b.
 """
 
+import hmac
 import hashlib
 from typing import Optional
 from noiseframework.exceptions import CryptoError, UnsupportedPrimitiveError
@@ -115,7 +116,7 @@ class SHA256(HashFunction):
         Returns:
             32-byte HMAC
         """
-        return hashlib.pbkdf2_hmac("sha256", data, key, 1, dklen=32)
+        return hmac.digest(key, data, "sha256")
 
 
 class SHA512(HashFunction):
@@ -148,7 +149,7 @@ class SHA512(HashFunction):
         Returns:
             64-byte HMAC
         """
-        return hashlib.pbkdf2_hmac("sha512", data, key, 1, dklen=64)
+        return hmac.digest(key, data, "sha512")
 
 
 class BLAKE2s(HashFunction):
