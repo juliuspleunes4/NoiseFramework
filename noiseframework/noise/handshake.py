@@ -249,6 +249,10 @@ class NoiseHandshake:
         self.symmetric.initialize_symmetric(protocol_name)
         self.logger.debug(f"Symmetric state initialized with protocol: {self.pattern.name}")
 
+        # Initialize with an empty prologue as per https://noiseprotocol.org/noise.html#the-handshakestate-object
+        prologue = b""
+        self.symmetric.mix_hash(prologue)
+
         # Process pre-messages
         self._process_pre_messages()
         self.logger.info(f"Handshake initialized as {self.role.value}, ready for message exchange")
@@ -711,7 +715,11 @@ class NoiseHandshake:
         protocol_name = self.pattern.name.encode("ascii")
         self.symmetric.initialize_symmetric(protocol_name)
         self.logger.debug(f"Symmetric state re-initialized with fallback protocol: {self.pattern.name}")
-        
+
+        # Re-initialize with an empty prologue as per https://noiseprotocol.org/noise.html#the-handshakestate-object
+        prologue = b""
+        self.symmetric.mix_hash(prologue)
+
         # Process pre-messages for fallback pattern
         # Alice's ephemeral key is now treated as a pre-message
         for token in self.initiator_pre:
